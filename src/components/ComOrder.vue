@@ -100,7 +100,7 @@ export default {
             
             // Gửi yêu cầu thanh toán đến phía backend
             try {
-                const response = await axios.post('http://localhost:3000/checkout', {
+                const response = await axios.post('http://localhost:3000/orders', {
                     customerInfo: this.customerInfo,
                     cartItems: this.cart,
                     totalAmount: this.totalAmount

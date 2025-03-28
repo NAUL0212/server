@@ -2,41 +2,51 @@
   <div>
     <h2>Đăng nhập</h2>
     <input v-model="username" placeholder="Tên đăng nhập" />
-    <input v-model="password"  type="password" placeholder="Mật khẩu" />
+    <input v-model="password" type="password" placeholder="Mật khẩu" />
     <button @click="login">Đăng nhập</button>
-    <p v-if="error">{{error}}</p>
+    <p v-if="error">{{ error }}</p>
   </div>
 </template>
 
 <script>
-import users from '@/data/users'
-import eventBus from '@/eventBus'
+import axios from "axios";
+import eventBus from "@/eventBus";
+
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      error: '',
-      users:users
-      
+      username: "",
+      password: "",
+      error: "",
     };
   },
-  methods:{
-    login(){
-        // tìm user khớp với (kiểm tra: username và password đăng nhập === username và password đã register lưu trong database)
-        const user = this.users.find(u=> u.username === this.username && u.password === this.password);
-        if(user){
-            //lưu người dùng vào localStorage nếu đăng nhập thành công
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            eventBus.emit('loginSuccess', user)          // phát tín hiệu đến ComHeader (cha)
-            this.$router.push('/');
-        }else{ // không khớp tài khoản, mật khẩu nào hết
-            this.error="Tên đăng nhập hoặc mật khẩu không đúng"
-        }
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post("http://localhost:3000/user/login", {
+          username: this.username,
+          password: this.password,
+        });
+
+        // Lấy dữ liệu phản hồi từ server
+        const { token, user } = response.data;
+
+        // Lưu token & user vào localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        // Phát tín hiệu đăng nhập thành công
+        eventBus.emit("loginSuccess", user);
+
+        // Chuyển hướng về trang chính
+        this.$router.push("/");
+      } catch (error) {
+        // Xử lý lỗi nếu đăng nhập thất bại
+        this.error =
+          error.response?.data?.message || "Lỗi khi đăng nhập. Vui lòng thử lại!";
+      }
     },
-    
-  }
-  
+  },
 };
 </script>
 <style scoped>
