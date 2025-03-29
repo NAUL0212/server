@@ -10,17 +10,11 @@ import Cart from '@/components/ComCart'
 import Order from '@/components/ComOrder'
 import Register from '@/components/ComRegister'
 import Login from '@/components/ComLogin'
-import Admin from '@/components/ComAdmin'
+
 
 // tạo mảng chứa những đường link
 const routes=[
     // đối tượng trang chủ
-
-    {
-        path:"/admin",
-        name:"Admin",
-        component:Admin
-    },
 
     {
         path:"/register",

@@ -29,9 +29,7 @@
 
       <div class="account">
         <template v-if="user">
-          <router-link to="/admin" class="username">
             Xin chào, {{ user.username }}
-          </router-link>
           <button @click="logout">Đăng Xuất</button>
         </template>
         <template v-else>
